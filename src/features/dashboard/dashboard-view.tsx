@@ -22,6 +22,184 @@ import {
   Trash2,
 } from "lucide-react";
 
+// ─── Semicircular Gauge ───────────────────────────────────────────────────────
+interface SemiCircleGaugeProps {
+  done: number;
+  inProgress: number;
+  todo: number;
+  total: number;
+  completionRate: number;
+}
+
+function SemiCircleGauge({
+  done,
+  inProgress,
+  todo,
+  total,
+  completionRate,
+}: SemiCircleGaugeProps) {
+  // SVG arc helpers — angles use standard math convention (0°=right, 90°=top, 180°=left)
+  // polarToCartesian flips the Y axis so 90° maps to the top of the SVG.
+  // All arcs go from a higher angle to a lower angle (180° → 0°) with
+  // sweep-flag=1 (clockwise in SVG screen coords) so they curve through the TOP.
+  const cx = 110;
+  const cy = 115;
+  const r = 85;
+  const strokeWidth = 22;
+
+  function polarToCartesian(angleDeg: number) {
+    const rad = (angleDeg * Math.PI) / 180;
+    return {
+      x: cx + r * Math.cos(rad),
+      y: cy - r * Math.sin(rad), // minus because SVG Y grows downward
+    };
+  }
+
+  function arcPath(startAngle: number, endAngle: number) {
+    const span = Math.abs(endAngle - startAngle);
+    if (span < 0.001) return "";
+    const start = polarToCartesian(startAngle);
+    const end = polarToCartesian(endAngle);
+    const largeArc = span > 180 ? 1 : 0;
+    // sweep-flag=1 → clockwise in SVG (= arcs curve through the top of the circle)
+    return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 1 ${end.x} ${end.y}`;
+  }
+
+  // Segments: done (pink), inProgress (yellow), todo (blue-ish)
+  // We draw left-to-right across the top: done occupies the left portion, then inProgress, then todo
+  const doneAngle = total > 0 ? (done / total) * 180 : 0;
+  const inProgressAngle = total > 0 ? (inProgress / total) * 180 : 0;
+  const todoAngle = total > 0 ? (todo / total) * 180 : 0;
+
+  // Angles run from 180° (left) → 0° (right)
+  const seg1Start = 180;
+  const seg1End = 180 - doneAngle;
+  const seg2Start = seg1End;
+  const seg2End = seg2Start - inProgressAngle;
+  const seg3Start = seg2End;
+  const seg3End = seg3Start - todoAngle;
+
+  const capRadius = strokeWidth / 2;
+
+  return (
+    <div className="flex flex-col items-center">
+      <svg
+        viewBox="0 0 220 140"
+        className="w-full max-w-[260px]"
+        aria-hidden="true"
+      >
+        {/* Track (grey background arc) */}
+        <path
+          d={arcPath(180, 0)}
+          fill="none"
+          stroke="#f0eef8"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+        />
+
+        {/* Done segment — coral/pink */}
+        {done > 0 && (
+          <g>
+            <path
+              d={arcPath(seg1Start, seg1End)}
+              fill="none"
+              stroke="#ff8a7a"
+              strokeWidth={strokeWidth}
+              strokeLinecap="butt"
+            />
+            <circle
+              cx={polarToCartesian(seg1Start).x}
+              cy={polarToCartesian(seg1Start).y}
+              r={capRadius}
+              fill="#ff8a7a"
+            />
+            <circle
+              cx={polarToCartesian(seg1End).x}
+              cy={polarToCartesian(seg1End).y}
+              r={capRadius}
+              fill="#ff8a7a"
+            />
+          </g>
+        )}
+
+        {/* In Progress segment — yellow */}
+        {inProgress > 0 && (
+          <g>
+            <path
+              d={arcPath(seg2Start, seg2End)}
+              fill="none"
+              stroke="#ffd05b"
+              strokeWidth={strokeWidth}
+              strokeLinecap="butt"
+            />
+            <circle
+              cx={polarToCartesian(seg2Start).x}
+              cy={polarToCartesian(seg2Start).y}
+              r={capRadius}
+              fill="#ffd05b"
+            />
+            <circle
+              cx={polarToCartesian(seg2End).x}
+              cy={polarToCartesian(seg2End).y}
+              r={capRadius}
+              fill="#ffd05b"
+            />
+          </g>
+        )}
+
+        {/* Todo segment — sky blue */}
+        {todo > 0 && (
+          <g>
+            <path
+              d={arcPath(seg3Start, seg3End)}
+              fill="none"
+              stroke="#93c5fd"
+              strokeWidth={strokeWidth}
+              strokeLinecap="butt"
+            />
+            <circle
+              cx={polarToCartesian(seg3Start).x}
+              cy={polarToCartesian(seg3Start).y}
+              r={capRadius}
+              fill="#93c5fd"
+            />
+            <circle
+              cx={polarToCartesian(seg3End).x}
+              cy={polarToCartesian(seg3End).y}
+              r={capRadius}
+              fill="#93c5fd"
+            />
+          </g>
+        )}
+
+        {/* Centre text */}
+        <text
+          x={cx}
+          y={cy - 2}
+          textAnchor="middle"
+          className="font-display"
+          fontSize="30"
+          fontWeight="800"
+          fill="#253044"
+        >
+          {completionRate}%
+        </text>
+        <text
+          x={cx}
+          y={cy + 18}
+          textAnchor="middle"
+          fontSize="10"
+          fill="#253044"
+          opacity="0.6"
+        >
+          Project Completed
+        </text>
+      </svg>
+    </div>
+  );
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 export function DashboardView() {
   const { openCreateTask, openEditTask, openDeleteTask } = useTaskModal();
 
@@ -205,7 +383,7 @@ export function DashboardView() {
                   </div>
                   <div>
                     <h3 className="text-base font-bold font-display text-[#253044]">
-                      Completion Rate
+                      Project Progress
                     </h3>
                     <p className="text-xs text-[#253044]/60">Overall delivery progress</p>
                   </div>
@@ -215,63 +393,37 @@ export function DashboardView() {
                 </span>
               </div>
 
-              {/* Giant percentage display */}
-              <div className="my-5 flex items-baseline gap-2">
-                <span className="font-display text-5xl font-extrabold text-[#253044]">
-                  {completionRate}%
-                </span>
-                <span className="text-xs text-[#253044]/60 font-semibold">
-                  ({done} of {total} completed)
-                </span>
-              </div>
-
-              {/* Stacked geometric progress bar */}
-              <div className="w-full h-5 rounded-full border-2 border-[#252b3a] bg-[#fffdf5] overflow-hidden flex p-0.5 gap-0.5 shadow-[1.5px_1.5px_0_0_#252b3a]">
-                {done > 0 && (
-                  <div
-                    style={{ width: `${(done / total) * 100}%` }}
-                    className="h-full bg-[#9bf1cd] rounded-l-full transition-all duration-500"
-                    title={`Done: ${done}`}
-                  />
-                )}
-                {inProgress > 0 && (
-                  <div
-                    style={{ width: `${(inProgress / total) * 100}%` }}
-                    className="h-full bg-[#6434df] transition-all duration-500"
-                    title={`In Progress: ${inProgress}`}
-                  />
-                )}
-                {todo > 0 && (
-                  <div
-                    style={{ width: `${(todo / total) * 100}%` }}
-                    className="h-full bg-[#ffd05b] rounded-r-full transition-all duration-500"
-                    title={`To Do: ${todo}`}
-                  />
-                )}
-              </div>
+              {/* Semicircular Gauge Progress */}
+              <SemiCircleGauge
+                done={done}
+                inProgress={inProgress}
+                todo={todo}
+                total={total}
+                completionRate={completionRate}
+              />
 
               {/* Status Breakdown Legend */}
-              <div className="mt-5 space-y-2">
+              <div className="mt-4 space-y-2">
                 <div className="flex items-center justify-between text-xs font-medium">
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#9bf1cd] border border-[#252b3a]" />
-                    <span className="text-[#253044]">Completed</span>
+                    <span className="w-3 h-3 rounded-full bg-[#ff8a7a] border border-[#252b3a]" />
+                    <span className="text-[#253044]">Task Done</span>
                   </div>
-                  <span className="font-bold text-[#253044]">{done} tasks</span>
-                </div>
-                <div className="flex items-center justify-between text-xs font-medium">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#6434df] border border-[#252b3a]" />
-                    <span className="text-[#253044]">In Progress</span>
-                  </div>
-                  <span className="font-bold text-[#253044]">{inProgress} tasks</span>
+                  <span className="font-bold text-[#253044]">{done}</span>
                 </div>
                 <div className="flex items-center justify-between text-xs font-medium">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-[#ffd05b] border border-[#252b3a]" />
-                    <span className="text-[#253044]">To Do</span>
+                    <span className="text-[#253044]">On Progress</span>
                   </div>
-                  <span className="font-bold text-[#253044]">{todo} tasks</span>
+                  <span className="font-bold text-[#253044]">{inProgress}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs font-medium">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-[#93c5fd] border border-[#252b3a]" />
+                    <span className="text-[#253044]">Still Waiting</span>
+                  </div>
+                  <span className="font-bold text-[#253044]">{todo}</span>
                 </div>
               </div>
             </div>
