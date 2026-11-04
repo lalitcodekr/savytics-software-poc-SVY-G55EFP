@@ -42,5 +42,6 @@ export interface TaskFilters {
   priority?: Priority | "";
   sort?: "newest" | "oldest" | "priority";
   page?: number;
+  limit?: number;
 }
 

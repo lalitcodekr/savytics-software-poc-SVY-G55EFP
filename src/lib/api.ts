@@ -20,6 +20,7 @@ function buildQuery(filters: TaskFilters): string {
   if (filters.priority) params.set("priority", filters.priority);
   if (filters.sort) params.set("sort", filters.sort);
   if (filters.page) params.set("page", String(filters.page));
+  if (filters.limit) params.set("limit", String(filters.limit));
   return params.toString() ? `?${params.toString()}` : "";
 }
 
