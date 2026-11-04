@@ -66,6 +66,10 @@ System specification, technical metadata, and quick navigation actions.
 |---|---|---|
 | ![Mobile Dashboard 1](docs/screenshots/mobile-dashboard-1.png) | ![Mobile Dashboard 2](docs/screenshots/mobile-dashboard-2.png) | ![Mobile Sidebar](docs/screenshots/mobile-sidebar.png) |
 
+| Task Management Hub | Three-State Kanban Board | Project Overview |
+|---|---|---|
+| ![Mobile Tasks](docs/screenshots/mobile-tasks.png) | ![Mobile Kanban](docs/screenshots/mobile-kanban.png) | ![Mobile Project Overview](docs/screenshots/mobile-project-overview.png) |
+
 ---
 
 ## 🏗️ Architecture & Tech Stack
