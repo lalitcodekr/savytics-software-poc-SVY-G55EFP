@@ -30,6 +30,44 @@ A full-stack project tracking application demonstrating robust engineering acros
 
 ---
 
+## 📸 Application Screenshots
+
+### Desktop Views
+
+#### 1. Interactive Dashboard
+Live summary metrics, overall completion progress bar, and recent task activity.
+![Dashboard](docs/screenshots/dashboard.png)
+
+#### 2. Task Management Hub (List View)
+Comprehensive task list with priority badges, inline status dropdowns, update timestamps, and pagination.
+![Task List](docs/screenshots/tasks-list.png)
+
+#### 3. Real-Time Search & Filtering
+Debounced keyword search across task titles and descriptions, combined with status and priority filtering.
+![Filtered Tasks](docs/screenshots/tasks-filtered.png)
+
+#### 4. Task Modal (Create & Edit)
+Accessible modal dialog with client-side Zod validation, character counters, priority selectors, and optimistic updates.
+![Task Modal](docs/screenshots/task-modal.png)
+
+#### 5. Three-State Kanban Board
+Visual workflow with dedicated columns for `TO DO`, `IN PROGRESS`, and `DONE` supporting drag-and-drop status transitions.
+![Kanban Board](docs/screenshots/kanban-board.png)
+
+#### 6. Project Overview & Architecture
+System specification, technical metadata, and quick navigation actions.
+![Project Overview](docs/screenshots/project-overview.png)
+
+---
+
+### Mobile Responsive Views
+
+| Dashboard (Top Metrics) | Dashboard (Progress & Tasks) | Navigation Drawer |
+|---|---|---|
+| ![Mobile Dashboard 1](docs/screenshots/mobile-dashboard-1.png) | ![Mobile Dashboard 2](docs/screenshots/mobile-dashboard-2.png) | ![Mobile Sidebar](docs/screenshots/mobile-sidebar.png) |
+
+---
+
 ## 🏗️ Architecture & Tech Stack
 
 ```
