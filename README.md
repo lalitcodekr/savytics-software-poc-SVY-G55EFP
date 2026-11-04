@@ -1,5 +1,6 @@
 # Mini Project Tracker (Savytics Assessment)
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-success?style=flat&logo=vercel)](https://savytics-software-poc-svy-g55efp.vercel.app)
 [![CI](https://github.com/lalitcodekr/savytics-software-poc-SVY-G55EFP/actions/workflows/ci.yml/badge.svg)](https://github.com/lalitcodekr/savytics-software-poc-SVY-G55EFP/actions/workflows/ci.yml)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)
 ![React](https://img.shields.io/badge/React-19-blue?style=flat&logo=react)
@@ -11,10 +12,22 @@ A full-stack project tracking application demonstrating robust engineering acros
 
 | Metadata | Details |
 |---|---|
+| **Live App** | [https://savytics-software-poc-svy-g55efp.vercel.app](https://savytics-software-poc-svy-g55efp.vercel.app) |
 | **Candidate ID** | `SVY-G55EFP` |
 | **Author** | Pyda Lalit Kumar |
 | **Repository** | `savytics-software-poc-SVY-G55EFP` |
 | **Assessment Date** | November 2026 |
+
+---
+
+## 🌐 Live Deployment
+
+The application is deployed and running live in production on Vercel:
+
+- **🔗 Production URL**: [https://savytics-software-poc-svy-g55efp.vercel.app](https://savytics-software-poc-svy-g55efp.vercel.app)
+- **⚡ Hosting**: Vercel (Next.js 16 App Router + Turbopack)
+- **🗄️ Database**: Neon Serverless PostgreSQL with Connection Pooling
+- **🔄 CI/CD**: Automated GitHub Actions workflow + Vercel Git integration
 
 ---
 
