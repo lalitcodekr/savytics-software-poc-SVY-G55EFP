@@ -2,7 +2,7 @@ import { PrismaClient, Priority, Status } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const tasks = [
+export const demoTasks = [
   {
     title: "Set up project repository",
     description: "Initialize the GitHub repo, add README and documentation.",
@@ -66,16 +66,32 @@ const tasks = [
 ];
 
 async function main() {
-  console.log("🌱 Seeding database...");
-  await prisma.task.deleteMany();
-  const created = await prisma.task.createMany({ data: tasks });
-  console.log(`✅ Created ${created.count} tasks.`);
+  const isDemo = process.argv.includes("--demo") || process.env.SEED_DEMO === "true";
+  const isClean = process.argv.includes("--clean") || process.env.CLEAN_TASKS === "true";
+
+  if (isClean) {
+    console.log("🧹 Clearing demo tasks from database...");
+    const deleted = await prisma.task.deleteMany();
+    console.log(`✅ Cleared ${deleted.count} tasks. Database is now empty.`);
+    return;
+  }
+
+  if (isDemo) {
+    console.log("🌱 Populating demonstration tasks for testing/development...");
+    await prisma.task.deleteMany();
+    const created = await prisma.task.createMany({ data: demoTasks });
+    console.log(`✅ Created ${created.count} demonstration tasks.`);
+    return;
+  }
+
+  console.log("🌱 Database initialization complete.");
+  console.log("ℹ️  Fresh installation starts with 0 tasks by default.");
+  console.log("ℹ️  To populate sample tasks for manual testing, run: npm run db:seed:demo");
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error("Database seed error:", e);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());
-
