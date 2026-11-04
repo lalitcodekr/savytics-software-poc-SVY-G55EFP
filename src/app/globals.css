@@ -1,26 +1,137 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Playful Geometric Design System Tokens */
+  --dp-color-ground: #fffdf5;            /* warm paper ground */
+  --dp-color-panel: #ffffff;             /* white reading surface */
+  --dp-color-ink: #253044;               /* primary text */
+  --dp-color-outline: #252b3a;           /* dark borders & hard shadows */
+  --dp-color-accent: #6434df;            /* primary interactive violet */
+  --dp-color-accent-hover: #5227c2;      /* deeper violet on hover */
+  --dp-color-accent-secondary: #ff78c5;  /* secondary pink: High priority / accent */
+  --dp-color-accent-warm: #ffd05b;       /* warm amber: Medium priority / accent */
+  --dp-color-accent-fresh: #9bf1cd;      /* fresh mint: Low priority / Done */
+  --dp-color-field-soft: #e9fff5;        /* soft pale mint background */
+  --dp-color-selection: #f1ebff;         /* pale violet: selected background */
+  --dp-color-rule-muted: #b8b6c5;        /* muted decorative divider */
+
+  /* Geometry & Shadows */
+  --radius-panel: 24px;
+  --radius-corner: 16px;
+  --radius-pill: 9999px;
+  --border-width: 2.5px;
+  --border-thick: 3px;
+  --shadow-offset: 4px;
+  --shadow-offset-sm: 2.5px;
+  --shadow-offset-lg: 6px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-ground: var(--dp-color-ground);
+  --color-panel: var(--dp-color-panel);
+  --color-ink: var(--dp-color-ink);
+  --color-outline: var(--dp-color-outline);
+  --color-accent: var(--dp-color-accent);
+  --color-accent-hover: var(--dp-color-accent-hover);
+  --color-pink: var(--dp-color-accent-secondary);
+  --color-amber: var(--dp-color-accent-warm);
+  --color-mint: var(--dp-color-accent-fresh);
+  --color-mint-soft: var(--dp-color-field-soft);
+  --color-selection: var(--dp-color-selection);
+  --color-rule: var(--dp-color-rule-muted);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--dp-color-ground);
+  color: var(--dp-color-ink);
+  font-family: var(--font-reading);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
+}
+
+/* Hard offset shadow utilities */
+.geo-border {
+  border: 2.5px solid var(--dp-color-outline);
+}
+
+.geo-border-thick {
+  border: 3px solid var(--dp-color-outline);
+}
+
+.geo-shadow {
+  box-shadow: 4px 4px 0 0 var(--dp-color-outline);
+}
+
+.geo-shadow-sm {
+  box-shadow: 2.5px 2.5px 0 0 var(--dp-color-outline);
+}
+
+.geo-shadow-lg {
+  box-shadow: 6px 6px 0 0 var(--dp-color-outline);
+}
+
+.geo-shadow-violet {
+  box-shadow: 4px 4px 0 0 var(--dp-color-accent);
+}
+
+.geo-shadow-violet-lg {
+  box-shadow: 6px 6px 0 0 var(--dp-color-accent);
+}
+
+.geo-shadow-pink {
+  box-shadow: 4px 4px 0 0 var(--dp-color-accent-secondary);
+}
+
+.geo-shadow-amber {
+  box-shadow: 4px 4px 0 0 var(--dp-color-accent-warm);
+}
+
+.geo-shadow-mint {
+  box-shadow: 4px 4px 0 0 var(--dp-color-accent-fresh);
+}
+
+/* Button & interactive press tactile animation */
+.geo-interactive {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.geo-interactive:hover {
+  transform: translate(-1.5px, -1.5px);
+}
+
+.geo-interactive:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 var(--dp-color-outline);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--dp-color-ground);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--dp-color-rule-muted);
+  border-radius: 9999px;
+  border: 2px solid var(--dp-color-ground);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dp-color-outline);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
